@@ -10,7 +10,7 @@ const glossaryDirectory = path.join(__dirname, 'glossary');
 
 // function to find available ID
 const getAvailableID = () => {
-	const files = fs.readFileSync(glossaryDirectory);
+	const files = fs.readdirSync(glossaryDirectory);
 	const onlyIDs = files.map(file => parseInt(path.parse(file).name))
 
 	let id = 1;
@@ -38,9 +38,9 @@ app.post('/api/word', (req, res) => {
 			res.status(500).json({ error: "Server error" })
 			return;
 		}
-
-		res.status(201).json({ message: `${word} was added to glossary with id: ${id}` });
 	})
+
+	res.status(201).json({ message: `${word} was added to glossary with id: ${id}` });
 })
 
 // get a word by ID
