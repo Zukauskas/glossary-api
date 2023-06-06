@@ -8,12 +8,42 @@ app.use(express.json());
 
 const glossaryDirectory = path.join(__dirname, 'glossary');
 
+// function to find available ID
+const getAvailableID = () => {
+	const files = fs.readFileSync(glossaryDirectory);
+	const onlyIDs = files.map(file => parseInt(path.parse(file).name))
+
+	let id = 1;
+	while (onlyIDs.includes(id)) {
+		id++
+	}
+
+	return id;
+}
+
 app.get('/', (req, res) => {
 	res.send('Linux Glossary')
 })
+// Add new word
+
+app.post('/api/word', (req, res) => {
+	const { word, definition } = req.body;
+	const id = getAvailableID();
+	const createdAt = new Date();
+	const wordFile = path.join(glossaryDirectory, `${id}.json`);
+	const wordData = JSON.stringify({ id, word, definition, createdAt });
+
+	fs.writeFileSync(wordFile, wordData, (err) => {
+		if (err) {
+			res.status(500).json({ error: "Server error" })
+			return;
+		}
+
+		res.status(201).json({ message: `${word} was added to glossary with id: ${id}` });
+	})
+})
 
 // get a word by ID
-
 app.get('/api/glossary/:id', (req, res) => {
 	const wordFile = path.join(glossaryDirectory, `${req.params.id}.json`)
 	if (!fs.existsSync(wordFile)) {
