@@ -12,13 +12,7 @@ const glossaryDirectory = path.join(__dirname, 'glossary');
 const getAvailableID = () => {
 	const files = fs.readdirSync(glossaryDirectory);
 	const onlyIDs = files.map(file => parseInt(path.parse(file).name))
-
-	let id = 1;
-	while (onlyIDs.includes(id)) {
-		id++
-	}
-
-	return id;
+	return onlyIDs[onlyIDs.length - 1] + 1
 }
 
 app.get('/', (req, res) => {
