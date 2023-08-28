@@ -1,10 +1,9 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const settings = require("./settings.json");
 
 const app = express();
-const port = 3000;
+const port = 3003;
 app.use(express.json());
 
 const glossaryDirectory = path.join(__dirname, "glossary");
@@ -74,18 +73,22 @@ app.get("/api/glossary", (req, res) => {
 
 // Get pages
 
+const args = process.argv.slice(2);
+const pageSizeArg = args.find((arg) => arg.startsWith("--pageSize="));
+const pageSizeConf = pageSizeArg
+    ? parseInt(pageSizeArg.split("=")[1])
+    : process.env.PAGE_DEFAULT_SIZE;
+
 app.get("/api/glossary-page/:page?/:pageSize?", (req, res) => {
     const { page, pageSize } = req.params;
     const parsedPage = page ? parseInt(page) : 1;
-    const parsedPageSize = pageSize
-        ? parseInt(pageSize)
-        : settings.pageDefaultSize;
+    const parsedPageSize = pageSize ? parseInt(pageSize) : pageSizeConf;
 
     if (
         isNaN(parsedPage) ||
         isNaN(parsedPageSize) ||
-        parsedPageSize < settings.pageMinSize ||
-        parsedPageSize > settings.pageMaxSize
+        parsedPageSize < process.env.PAGE_MIN_SIZE ||
+        parsedPageSize > process.env.PAGE_MAX_SIZE
     ) {
         res.status(400).json({ error: "Invalid page or pageSize." });
         return;
