@@ -92,7 +92,6 @@ const minPageSizeConf = minPageSizeArg
 const maxPageSizeConf = maxPageSizeArg
     ? parseInt(maxPageSizeArg.split("=")[1])
     : process.env.PAGE_MAX_SIZE;
-console.log(process.env);
 
 app.get("/api/glossary-page/:page?/:pageSize?", (req, res) => {
     const { page, pageSize } = req.params;
