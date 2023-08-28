@@ -28,6 +28,20 @@ GET `/api/glossary`
 
 GET `/api/glossary/:id`
 
--   Get word by the ID
+-   Get word by the ID.
 
-Reachable at: `http://localhost:3000/`
+GET `/api/glossary-page`
+
+-   Get word list of default size from first page.
+
+GET `/api/glossary-page/:page`
+
+-   Get word list of default size from selected page.
+
+GET `/api/glossary-page/:page/:pageSize`
+
+-   Get word list of select size and from selected page.
+
+Default variables are set in `.env` file, see `env.example` for an example or rename it to `.env` and use it.
+
+Reachable at: `http://localhost:3003/`
