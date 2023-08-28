@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
@@ -73,11 +74,25 @@ app.get("/api/glossary", (req, res) => {
 
 // Get pages
 
+// Set default page size settings
 const args = process.argv.slice(2);
+
 const pageSizeArg = args.find((arg) => arg.startsWith("--pageSize="));
+const minPageSizeArg = args.find((arg) => arg.startsWith("--minSize="));
+const maxPageSizeArg = args.find((arg) => arg.startsWith("--maxSize="));
+
 const pageSizeConf = pageSizeArg
     ? parseInt(pageSizeArg.split("=")[1])
     : process.env.PAGE_DEFAULT_SIZE;
+
+const minPageSizeConf = minPageSizeArg
+    ? parseInt(minPageSizeArg.split("=")[1])
+    : process.env.PAGE_MIN_SIZE;
+
+const maxPageSizeConf = maxPageSizeArg
+    ? parseInt(maxPageSizeArg.split("=")[1])
+    : process.env.PAGE_MAX_SIZE;
+console.log(process.env);
 
 app.get("/api/glossary-page/:page?/:pageSize?", (req, res) => {
     const { page, pageSize } = req.params;
@@ -87,8 +102,8 @@ app.get("/api/glossary-page/:page?/:pageSize?", (req, res) => {
     if (
         isNaN(parsedPage) ||
         isNaN(parsedPageSize) ||
-        parsedPageSize < process.env.PAGE_MIN_SIZE ||
-        parsedPageSize > process.env.PAGE_MAX_SIZE
+        parsedPageSize < minPageSizeConf ||
+        parsedPageSize > maxPageSizeConf
     ) {
         res.status(400).json({ error: "Invalid page or pageSize." });
         return;
