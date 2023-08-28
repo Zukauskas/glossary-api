@@ -20,14 +20,14 @@ Endpoints:
 
 POST `/api/word`
 
-- Add new word to glosarry. Send in body:`{word, definition}`.
+-   Add new word to glossary. Send in body:`{word, definition}`.
 
 GET `/api/glossary`
 
-- Get all the words existing in the glossary.
+-   Get all the words existing in the glossary.
 
 GET `/api/glossary/:id`
 
-- Get word by the ID
+-   Get word by the ID
 
 Reachable at: `http://localhost:3000/`
